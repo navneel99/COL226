@@ -4,8 +4,8 @@ exception Not_implemented
 exception TypeError
 
 (* abstract syntax *)
-type  exptree =  Done (* End of input *)
-  | Var of string (* variables starting with a Capital letter, represented as alphanumeric strings with underscores (_) and apostrophes (') *)
+type  exptree =  
+  Var of string (* variables starting with a Capital letter, represented as alphanumeric strings with underscores (_) and apostrophes (') *)
   | N of int      (* Integer constant *)
   | B of bool     (* Boolean constant *)
   (* unary operators on integers *)
@@ -37,6 +37,8 @@ type  exptree =  Done (* End of input *)
   (* projecting the i-th component of an expression (which evaluates to an n-tuple, and 1 <= i <= n) *)
   | Project of (int*int) * exptree   (* Proj((i,n), e)  0 < i <= n *)
 
+(* The type of value returned by the definitional interpreter. *)
+type value = NumVal of int | BoolVal of bool | TupVal of int * (value list)
 
 (* The language should contain the following types of expressions:  integers and booleans *)
 type answer = Num of bigint | Bool of bool | Tup of int * (answer list)
@@ -53,83 +55,83 @@ let rec listFunc l f a = match l with
                             | _ -> raise TypeError) *)
 
 let rec eval ex rho = match ex with 
-    |   N x -> Num (mk_big x)
-    |   B x -> Bool (x)
+    |   N x -> NumVal (x)
+    |   B x -> BoolVal (x)
     |   Var s -> rho s
     |   Negative x -> let a = eval x rho in 
                                             (match a with
-                                              | Num(b) -> Num(minus b)
-                                              | _ -> raise TypeError) 
+                                              | NumVal(b) -> NumVal(-b)
+                                              | _ -> raise TypeError)  
     |   Abs x -> let a = eval x rho in      (match a with
-                                              | Num(b) -> Num(abs b)
+                                              | NumVal(b) -> NumVal(Pervasives.abs b)
                                               | _ -> raise TypeError)                                              
     |   Not x ->  let a = eval x rho in 
                                         (match a with
-                                          | Bool(r) -> Bool(not r)
+                                          | BoolVal(r) -> BoolVal(not r)
                                           | _ -> raise TypeError )
     |   Add(x,y) ->  let  a = (eval x rho) in let  b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Num(add s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> NumVal(s1 + s2)
                                                                   | _ -> raise TypeError)
     |   Sub(x,y) ->  let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Num(sub s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> NumVal(s1-s2)
                                                                   | _ -> raise TypeError)
     |   Mult(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Num(mult s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> NumVal(s1 * s2)
                                                                   | _ -> raise TypeError) 
     (* mult (eval x rho) (eval y rho) *)
     |   Div(x,y) ->  let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Num(div s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> NumVal(s1/s2)
                                                                   | _ -> raise TypeError)
     (* div (eval x rho) (eval y rho) *)
     |   Rem(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Num(rem s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> NumVal(s1 mod s2)
                                                                   | _ -> raise TypeError)
      (* rem (eval x rho) (eval y rho) *)
     |   Conjunction(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Bool(s1),Bool(s2) -> Bool(s1 || s2)
+                                                                  | BoolVal(s1),BoolVal(s2) -> BoolVal(s1 || s2)
                                                                   | _ -> raise TypeError)
     (* (eval x rho) || (eval y rho) *)
     |   Disjunction(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Bool(s1),Bool(s2) -> Bool(s1 && s2)
+                                                                  | BoolVal(s1),BoolVal(s2) -> BoolVal(s1 && s2)
                                                                   | _ -> raise TypeError)
     (* (eval x rho) && (eval y rho) *)
     |   Equals(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Bool(eq s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> BoolVal(s1 = s2)
                                                                   | _ -> raise TypeError)
     (* eq (eval x rho) (eval y rho) *)
     |   GreaterTE(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Bool(geq s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> BoolVal(s1 >= s2)
                                                                   | _ -> raise TypeError)
     (* geq (eval x rho) (eval y rho) *)
     |   LessTE(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Bool(leq s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> BoolVal(s1 <= s2)
                                                                   | _ -> raise TypeError)
     (* leq (eval x rho) (eval y rho) *)
     |   GreaterT(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Bool(gt s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> BoolVal(s1 > s2)
                                                                   | _ -> raise TypeError)
     (* gt (eval x rho) (eval y rho) *)
     |   LessT(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | Num(s1),Num(s2) -> Bool(lt s1 s2)
+                                                                  | NumVal(s1),NumVal(s2) -> BoolVal(s1 < s2)
                                                                   | _ -> raise TypeError)
     (* lt (eval x rho) (eval y rho) *)
     |   InParen x -> eval x rho
     |   IfThenElse(x,y,z) -> let a = eval x rho in
-                             (if (a = Bool true) then (eval y rho) else (eval z rho))
+                             (if (a = BoolVal true ) then (eval y rho) else (eval z rho))
     |   Tuple(n,l) -> let te = n in
-                        (let r = (listFunc l eval rho) in Tup(te,r))
+                        (let r = (listFunc l eval rho) in TupVal(te,r))
     |   Project(a,b) -> let i,n = a in  (match b with 
                                           | Tuple(a,l) -> let z1 = eleFinder l i in eval z1 rho
                                           | _ -> raise TypeError)                                      

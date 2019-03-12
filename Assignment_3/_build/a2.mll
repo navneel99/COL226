@@ -22,31 +22,28 @@ rule read = parse
    eof                { EOF }
   | integer as n {INT (int_of_string (remPlus n)) }
   | whitespace {read lexbuf}
-  | "T" {BOOL true }
-  | "F" {BOOL false }
-  | "abs" {ABS }
-  | "+" {PLUS }
-  | "-" {MINUS }
-  | "*" {TIMES }
-  | "div" {DIV }
-  | "mod" {REM }
-  | "~" {TILDA }
-  (* | "^" {EXP } *)
-  | "(" {LP }
-  | ")" {RP }
-  | "not" {NOT }
-  | "/\\" {DISJ }
-  | "\\/" {CONJ }
-  | "=" {EQ }
-  | ">" {GT }
-  | "<" {LT }
-  (* | ">=" {GEQ }
-  | "<=" {LEQ } *)
-  | "if" {IF }
-  | "then" {THEN }
-  | "else" {ELSE }
-  | "fi"  {FI }
-  (* | "def" {DEF } *)
-  | str as a {ID a }
-  (* | ";" {DELIMITER } *)
+  | "T" {BOOL true}
+  | "F" {BOOL false}
+  | "abs" {ABS}
+  | "+" {PLUS}
+  | "-" {MINUS}
+  | "*" {TIMES}
+  | "div" {DIV}
+  | "mod" {REM}
+  | "~" {TILDA}
+  | "(" {LP}
+  | ")" {RP}
+  | "not" {NOT}
+  | "/\\" {DISJ}
+  | "\\/" {CONJ}
+  | "=" {EQ}
+  | ">" {GT}
+  | "<" {LT}
+  | "if" {IF}
+  | "then" {THEN}
+  | "else" {ELSE}
+  | "fi"  {FI}
+  | "," {COMMA}
+  | "proj" {PROJ}
+  | str as a {ID a}
   | _ as a {raise (InvalidToken a)}
