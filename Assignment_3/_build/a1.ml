@@ -2,6 +2,7 @@
 open A0
 exception Not_implemented
 exception TypeError
+exception TupleError of string
 
 (* abstract syntax *)
 type  exptree =  
@@ -132,9 +133,10 @@ let rec eval ex rho = match ex with
                              (if (a = BoolVal true ) then (eval y rho) else (eval z rho))
     |   Tuple(n,l) -> let te = n in
                         (let r = (listFunc l eval rho) in TupVal(te,r))
-    |   Project(a,b) -> let i,n = a in  (match b with 
-                                          | Tuple(a,l) -> let z1 = eleFinder l i in eval z1 rho
-                                          | _ -> raise TypeError)                                      
+    |   Project(a,b) -> let i,n = a in if (i<=n) then (match b with 
+                                          | Tuple(w,l) -> if (w = n) then let z1 = eleFinder l i in eval z1 rho else raise(TupleError "The lengths of tuple don't match.")
+                                          | _ -> raise TypeError) 
+                                          else raise(TupleError "Your element is greater than the list")                  
 
 (* opcodes of the stack machine (in the same sequence as above) *)
 
@@ -171,8 +173,8 @@ type opcode = VAR of string | NCONST of bigint | BCONST of bool | ABS | UNARYMIN
   |   IfThenElse(x,y,z) -> (compile z)@(compile y)@(compile x)@[IFTE]
   |   Tuple(x,l) -> let a = indivApp compile l in a @ [TUPLE x]
   |   Project(a,b) ->  let i,n = a in (match b with
-                        | Tuple(x1,x2) -> let y = (indivApp compile x2) in y @ [PROJ (i,n)]
-                        | _ -> raise TypeError)
+                        | Tuple(x1,x2) -> if (x1 = n) then let y = (indivApp compile x2) in y @ [PROJ (i,n)] else raise(TupleError "Lengths of tuple don't match.")
+                        | _ -> raise (TupleError "2nd argument is not a tuple."))
 
 
 let sinopuse a b = match a with
@@ -247,5 +249,6 @@ let rec stackmc bl rho ol = match ol with
                 | IFTE -> (match bl with fe::se::te::tl -> if (fe = Bool true) then (stackmc (se::tl) rho xs) else (stackmc (te::tl) rho xs) )
                 | TUPLE n -> (let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in let finpopEle = List.rev(popdEle)in
                           stackmc (Tup(n,finpopEle)::leftOver) rho xs)
-                | PROJ(i,n) -> let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in let finpopEle = List.rev(popdEle)in
+                | PROJ(i,n) -> if (i<=n) then let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in let finpopEle = List.rev(popdEle)in
                           stackmc ((eleFinder finpopEle i)::leftOver) rho xs
+                            else raise(TupleError "Element to find is greater than the list of elements")

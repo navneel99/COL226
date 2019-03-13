@@ -113,7 +113,6 @@ constant:
   | INT                    { N($1) }
   | BOOL                    { B($1) }
   | LP and_expr RP              { InParen($2) }
-  
 ;
 
 

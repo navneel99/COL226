@@ -49,4 +49,4 @@ let rho s = match s with
 |  "Y" -> BoolVal true
 |  "Z" -> TupVal (3, [NumVal 5; BoolVal true; NumVal 1]);;
 
-let _ = (parser "proj(2,4)(15,proj(1,2)(4,5),11,10)" rho);;
+let _ = (parser "proj(3,3)(15,11,10)" rho);;
