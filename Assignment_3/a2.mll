@@ -14,9 +14,11 @@ if (c = '+') then (String.sub a 1 (b-1)) else a;;
   - End of buffer is indicated by EOF token below
   - There is no trailer. The scanner function is written in the wrapper file (test_a3.ml)
 *)
-let integer = ('0'| ('+'|'-')?['1'-'9']+['0'-'9']*)
+(* let integer = ('0'| ('+'|'-')?['1'-'9']+['0'-'9']*) 
+let integer = ('0'|['1'-'9']+['0'-'9']*)
+
 let whitespace =  [' ' '\t']+
-let str = ['a'-'z']['a'-'z''A'-'Z''0'-'9']*
+let str = ['A'-'Z']['a'-'z''A'-'Z''0'-'9''_' '\'']*
 
 rule read = parse
    eof                { EOF }

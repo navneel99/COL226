@@ -35,7 +35,7 @@ or_expr:
 ;
 
 not_expr:
-  | NOT and_expr          { Not($2) }
+  | NOT constant          { Not($2) }
   | eq_expr             { $1 }
 ;
 
@@ -50,27 +50,25 @@ lt_expr:
 ;
 
 gt_expr:
-  | gt_expr GT EQ sub_expr { GreaterTE($1,$4) }
-  | gt_expr GT sub_expr   { GreaterT($1,$3) }
-  | sub_expr              { $1 }
+  | gt_expr GT EQ add_sub_expr { GreaterTE($1,$4) }
+  | gt_expr GT add_sub_expr   { GreaterT($1,$3) }
+  | add_sub_expr              { $1 }
 ;
 
-sub_expr:
-  | add_expr MINUS sub_expr { Sub($1,$3) }
-  | add_expr                { $1 }
-;
-
-add_expr:
-  | add_expr PLUS rem_expr  { Add($1,$3) }
+add_sub_expr:
+  | add_sub_expr MINUS rem_expr { Sub($1,$3) }
+  | add_sub_expr PLUS rem_expr  { Add($1,$3) }
   | rem_expr               { $1 }
 ;
 
 rem_expr:
-  | rem_expr REM mult_expr { Rem($1,$3) }
-  | mult_expr             { $1 }
+  | rem_expr REM abs_expr { Rem($1,$3) }
+  | rem_expr TIMES abs_expr { Mult($1,$3) }
+  | rem_expr DIV abs_expr { Div($1,$3) }
+  | abs_expr             { $1 }
 ;
 
-mult_expr:
+/* mult_expr:
   | mult_expr TIMES div_expr  { Mult($1,$3) }
   | div_expr               { $1 }
 ;
@@ -78,15 +76,16 @@ mult_expr:
 div_expr:
   | div_expr DIV abs_expr  { Div($1,$3) }
   | abs_expr               { $1 }
-;
+; */
 
 abs_expr:
-  | ABS sub_expr         { Abs($2) }
-  | neg_expr              { $1 }
+  | TILDA abs_expr         { Negative($2)}
+  | ABS abs_expr         { Abs($2) }
+  | ifte_expr              { $1 }
 ;
-neg_expr:
-  | TILDA sub_expr        { Negative($2) }
-  | ifte_expr             { $1 }
+/* neg_expr:
+  | TILDA ifte_expr        { Negative($2) }
+  | ifte_expr             { $1 } */
 ;
  ifte_expr:
   | IF and_expr THEN and_expr ELSE and_expr FI { IfThenElse($2,$4,$6) }
@@ -99,13 +98,14 @@ neg_expr:
 ;
 
 tup_expr:
-  | LP rem_par RP { let a,b = $2 in Tuple(a,b) }
+  | LP rem_par RP { let a,b = $2 in Tuple(a,b) }  
+  | LP RP    {Tuple(0,[])}
   | constant { $1 }
 ;
 
 rem_par:
+  | and_expr COMMA and_expr{ (2,[$1;$3]) }
   | and_expr COMMA rem_par {let x,y = $3 in (x+1,$1::y)}
-  | and_expr { (1,[$1]) }
 ; 
 
 constant:

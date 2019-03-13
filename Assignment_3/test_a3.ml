@@ -46,7 +46,8 @@ let parser s rho =
 (* Input is given as string and output is a value *)
 let rho s = match s with 
    "X" -> NumVal 5
-|  "Y" -> BoolVal true
+|  "X_3" -> NumVal 10   
+|  "Y_'aaa" -> BoolVal true
 |  "Z" -> TupVal (3, [NumVal 5; BoolVal true; NumVal 1]);;
 
-let _ = (parser "proj(3,3)(15,11,10)" rho);;
+let _ = (parser "2 mod 3*5" rho);;
