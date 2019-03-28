@@ -36,8 +36,8 @@ rule read = parse
   | "(" {LP}
   | ")" {RP}
   | "not" {NOT}
-  | "/\\" {DISJ}
-  | "\\/" {CONJ}
+  | "/\\" {CONJ}
+  | "\\/" {DISJ}
   | "=" {EQ}
   | ">" {GT}
   | "<" {LT}

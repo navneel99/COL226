@@ -283,12 +283,12 @@ let
 
   | 15 ->
 # 39 "a2.mll"
-          (DISJ)
+          (CONJ)
 # 288 "a2.ml"
 
   | 16 ->
 # 40 "a2.mll"
-          (CONJ)
+          (DISJ)
 # 293 "a2.ml"
 
   | 17 ->

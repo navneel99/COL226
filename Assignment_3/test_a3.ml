@@ -47,7 +47,7 @@ let parser s rho =
 let rho s = match s with 
    "X" -> NumVal 5
 |  "X_3" -> NumVal 10   
-|  "Y_'aaa" -> BoolVal true
+|  "TTrue" -> BoolVal true
 |  "Z" -> TupVal (3, [NumVal 5; BoolVal true; NumVal 1]);;
 
-let _ = (parser "2 mod 3*5" rho);;
+let _ = (parser "(1,2,(3,(4,5)))" rho);;

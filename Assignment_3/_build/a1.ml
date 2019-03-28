@@ -95,12 +95,12 @@ let rec eval ex rho = match ex with
      (* rem (eval x rho) (eval y rho) *)
     |   Conjunction(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | BoolVal(s1),BoolVal(s2) -> BoolVal(s1 || s2)
+                                                                  | BoolVal(s1),BoolVal(s2) -> BoolVal(s1 && s2)
                                                                   | _ -> raise TypeError)
     (* (eval x rho) || (eval y rho) *)
     |   Disjunction(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
                                                                   (match a,b with
-                                                                  | BoolVal(s1),BoolVal(s2) -> BoolVal(s1 && s2)
+                                                                  | BoolVal(s1),BoolVal(s2) -> BoolVal(s1 || s2)
                                                                   | _ -> raise TypeError)
     (* (eval x rho) && (eval y rho) *)
     |   Equals(x,y) -> let  a = (eval x rho) in let b = (eval y rho)  in 
@@ -206,10 +206,10 @@ let twoopuse a b c = match a with
                   | Num(x),Num(y) -> Num(rem x y)
                   | _,_ -> raise TypeError)
     |   CONJ -> (match b,c with
-                  | Bool(x),Bool(y) -> Bool(x || y)
+                  | Bool(x),Bool(y) -> Bool(x && y)
                   | _,_ -> raise TypeError)
     |   DISJ -> (match b,c with
-                  | Bool(x),Bool(y) -> Bool(x && y)
+                  | Bool(x),Bool(y) -> Bool(x || y)
                   | _,_ -> raise TypeError)
     |   EQS -> (match b,c with
                   | Num(x),Num(y) -> Bool(eq x y)
@@ -230,7 +230,7 @@ let twoopuse a b c = match a with
 
 let rec listPopper l n = match n,l with
                           | 0,_ -> []
-                          | x,y::ys -> (listPopper ys (x-1)) @ [y] 
+                          | x,y::ys -> y::(listPopper ys (x-1)) 
 let rec remListAfterPopping l n = match n,l with
                           | 0,d -> d
                           | x,y::ys -> remListAfterPopping ys (x-1) 
@@ -247,8 +247,8 @@ let rec stackmc bl rho ol = match ol with
                 | PLUS | MINUS | MULT | DIV | REM | CONJ | DISJ | EQS | GTE | LTE | GT | LT -> (match bl with h::m::t -> let ans = twoopuse x h m in
                                                                                  stackmc (ans :: t) rho xs)
                 | IFTE -> (match bl with fe::se::te::tl -> if (fe = Bool true) then (stackmc (se::tl) rho xs) else (stackmc (te::tl) rho xs) )
-                | TUPLE n -> (let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in let finpopEle = List.rev(popdEle)in
-                          stackmc (Tup(n,finpopEle)::leftOver) rho xs)
-                | PROJ(i,n) -> if (i<=n) then let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in let finpopEle = List.rev(popdEle)in
-                          stackmc ((eleFinder finpopEle i)::leftOver) rho xs
+                | TUPLE n -> (let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in
+                          stackmc (Tup(n,popdEle)::leftOver) rho xs)
+                | PROJ(i,n) -> if (i<=n) then let popdEle = listPopper bl n in let leftOver = remListAfterPopping bl n in 
+                          stackmc ((eleFinder popdEle i)::leftOver) rho xs
                             else raise(TupleError "Element to find is greater than the list of elements")

@@ -1,5 +1,6 @@
 {
   open A3
+  exception Not_implemented
   exception InvalidToken of char;;
 
 let remPlus a = let b = (String.length a) in
@@ -12,10 +13,11 @@ if (c = '+') then (String.sub a 1 (b-1)) else a;;
   - Tokens are defined in A3.mly
   - Return type is token and not token list
   - End of buffer is indicated by EOF token below
-  - There is no trailer. The scanner function is written in the wrapper file (test_a3.ml)
+  - There is no trailer. The scanner function is written in the wrapper file (test_a4.ml)
+  - This is sample implementation. Please rewrite them as per the specifications
 *)
-(* let integer = ('0'| ('+'|'-')?['1'-'9']+['0'-'9']*) 
-let integer = ('0'|['1'-'9']+['0'-'9']*)
+
+let integer = ('0'|['1'-'9']+['0'-'9']
 
 let whitespace =  [' ' '\t']+
 let str = ['A'-'Z']['a'-'z''A'-'Z''0'-'9''_' '\'']*
@@ -47,5 +49,13 @@ rule read = parse
   | "fi"  {FI}
   | "," {COMMA}
   | "proj" {PROJ}
+  | "def" {DEF}
+  | "in" {IN}
+  | "end" {END}
+  | "\\" {BACKSLASH}
+  | ";" {SEMICOLON}
+  | "." {DOT}
+  | "||" {PARALLEL}
+  | "local" {LOCAL}
   | str as a {ID a}
   | _ as a {raise (InvalidToken a)}
