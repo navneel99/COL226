@@ -110,10 +110,18 @@ rem_par:
 ; 
 
 let_expr:
-  | LET simple_def IN and_expr END { Let($2, $4)}
-  | constant { $1 }
+  | LET simple_def IN and_expr END { Let($2, $4) }
+  | funAbs_expr { $1 }
 ;
 
+funAbs_expr:
+  | BACKSLASH ID DOT and_expr { FunctionAbstraction($2,$4)}
+  | funCall_expr { $1 }
+;
+funCall_expr:
+  | and_expr LP and_expr RP {FunctionCall($1,$3)}
+  | constant { $1 }
+;
 constant:
   | ID                     { Var($1) }
   | INT                    { N($1) }
@@ -143,10 +151,11 @@ paral_def:
 ;
 
 local_def:
-  | LOCAL local_def IN simple_def END { Local($2, $4) }
+  | LOCAL simple_def IN simple_def END { Local($2, $4) }
   | simple_def { $1 }
 ;
 
 simple_def:
   | LET ID IN and_expr END { Simple($2, $4) }
+  | LP seq_def RP  { $2 }
 ;
