@@ -73,8 +73,9 @@ let g_dash = [("U", Tint); ("V", Tbool)];;
 
 let e1 = exp_parser "let def A = Z(X) in W(A) end" rho;;
 hastype g e1 Tint;;              (* should return true *)
-let e2 = exp_parser "\\M.(W(Z(M)))" rho;;
-hastype g e2 (Tfunc(Tint, Tint));; (* should return true *)
+let e2 = exp_parser "\\M.(Z(W(M)))" rho;;
+(* let e2 = exp_parser "\\M.(Z(M))" rho;; *)
+hastype g e2 (Tfunc(Tbool, Tbool));; (* should return true *)
 
 
 let d1 = def_parser "def U = X" rho;;

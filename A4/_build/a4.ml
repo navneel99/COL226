@@ -29,9 +29,10 @@ let rec chk2L l1 l2 = match l1 with
 let rec shouldFun g e =  match e with
                         | N x -> Tint
                         | B x -> Tbool
-                        | Var s -> getTypeFromList g s 
+                        | Var s -> (try getTypeFromList g s 
+                                    with TypeError -> Tint)
                         | Abs x | Negative x -> shouldFun g x 
-                        |Not x -> shouldFun g x
+                        | Not x -> shouldFun g x
                         | Add(x,y) | Sub(x,y) | Mult(x,y) | Div(x,y) | Rem(x,y)  ->  Tint
                         | Conjunction(x,y) | Disjunction(x,y) | Equals(x,y) | GreaterT(x,y) | GreaterTE(x,y) | LessT(x,y) | LessTE(x,y)-> Tbool
                         | InParen x -> shouldFun g x 
@@ -44,43 +45,22 @@ let rec shouldFun g e =  match e with
                         | Project(a,l) -> let temp = shouldFun g l in let i,n = a in (match temp with 
                                                                                     | Ttuple x -> ithFromList x i
                                                                                     | _ -> raise TypeError)
-                        | FunctionAbstraction(s,l) -> let temp2 = shouldFun g l in let pred = shouldFun g (Var s) in Tfunc(pred,temp2)
+                        | FunctionAbstraction(s,l) -> let temp2 = shouldFun g l in 
+                                                                          let predictor g e crt = let newtemp1 = shouldFun g (FunctionCall(e,N 1)) in
+                                                                          (* let newtemp2 = retFun g (FunctionCall(e,B true)) in *)
+                                                                          if (newtemp1 = crt) then Tint else
+                                                                          Tbool
+                                                      in let temp3 = predictor g l temp2 in Tfunc(temp3,temp2)
                         | FunctionCall(a,b) -> let temp = shouldFun g a in let temp2 = shouldFun g b in (match temp,temp2 with 
                                                                                                     | Tfunc(a,b),Tfunc(c,d) -> Tfunc(c,b)
                                                                                                     | Tfunc(a,b),c -> b
-                                                                                                    | _ -> raise TypeError)
-
-let rec lastTry g e vbl = match e with
-    | Abs x | Negative x -> (match x with 
-                            | Var s -> if (s=vbl) then Tint)
-    | Not x -> (match x with
-                | Var s -> if (s=vbl) then Tbool )
-    | Add(x,y) | Sub(x,y) | Mult(x,y) | Div(x,y) | Rem(x,y) -> (match x,y with
-                                                                | Var s1, Var s2 -> if (s1 = vbl) || (s2 = vbl) then Tint
-                                                                | Var s1,_ -> if (s1 = vbl) then Tint
-                                                                | _, Var s1 -> if (s1 = vbl) then Tint )
-    |  Equals(x,y) | GreaterT(x,y) | GreaterTE(x,y) | LessT(x,y) | LessTE(x,y) -> (match x,y with
-                                                                                    | Var s1, Var s2 -> if (s1 = vbl) || (s2 = vbl) then Tbool
-                                                                                    | Var s1,_ -> if (s1 = vbl) then Tbool
-                                                                                    | _, Var s1 -> if (s1 = vbl) then Tbool )
-    | Conjunction(x,y) | Disjunction(x,y) -> (match x,y with
-                                                | Var s1, Var s2 -> if (s1 = vbl) || (s2 = vbl) then Tbool
-                                                | Var s1,_ -> if (s1 = vbl) then Tbool
-                                                | _, Var s1 -> if (s1 = vbl) then Tbool )
-    | Tuple(x,y) -> (match x,y with
-                      | Var s1,_ -> if (s1 = vbl) then Tint )
-    | Project(x,y) -> (match x with
-                      | Var s1,_ | _,Var s1 -> if (s1=vbl) then Tint)
-    | FunctionCall(x,y) -> (match x,y with
-                            | _, Var s1 -> let temp = retFun g x in (match temp with
-                                            | Tfunc(a,b) -> if (s1=vbl) then a) )
-     
-    
+                                                                                                    | _,_ -> temp)
 
 let rec retFun g e = (match e with
                   | N x -> Tint
                   | B x -> Tbool
-                  | Var s -> getTypeFromList g s
+                  | Var s -> (try getTypeFromList g s
+                              with TypeError -> Tint)
                   | Abs x | Negative x | Not x-> retFun g x 
                   | Add(x,y) | Sub(x,y) | Mult(x,y) | Div(x,y) | Rem(x,y) -> let temp1 = retFun g x in let temp2 = retFun g y in if (temp1 = temp2) && (temp1 = Tint) then Tint else Tunit
                   | Equals(x,y) | GreaterT(x,y) | GreaterTE(x,y) | LessT(x,y) | LessTE(x,y) -> let temp1 = retFun g x in let temp2 = retFun g y in if (temp1 = temp2) && (temp1 = Tint) then Tbool else Tunit
@@ -96,11 +76,17 @@ let rec retFun g e = (match e with
                   | Project(a,l) -> let temp = retFun g l in let i,n = a in (match temp with 
                                                                               | Ttuple x -> ithFromList x i
                                                                               | _ -> raise TypeError)
-                  | FunctionAbstraction(s,l) -> let temp2 = shouldFun g l in let pred = shouldFun g (Var s) in Tfunc(pred,temp2)
+                  (* | FunctionAbstraction(s,l) -> let temp2 = shouldFun g l in let pred = shouldFun g (Var s) in Tfunc(pred,temp2) *)
+                  | FunctionAbstraction(s,l) -> let temp2 = shouldFun g l in 
+                                                    let predictor g e crt = let newtemp1 = retFun g (FunctionCall(e,N 1)) in
+                                                                                (* let newtemp2 = retFun g (FunctionCall(e,B true)) in *)
+                                                                                if (newtemp1 = crt) then Tint else
+                                                                                Tbool
+                                                    in let temp3 = predictor g l temp2 in Tfunc(temp3,temp2)
                   | FunctionCall(a,b) -> let temp = retFun g a in let temp2 = retFun g b in (match temp,temp2 with 
                                                                                               | Tfunc(a,b),Tfunc(c,d) -> if (d=a) then Tfunc(c,b) else Tunit
                                                                                               | Tfunc(a,b),c -> if (c=a) then b else Tunit
-                                                                                              | _ -> raise TypeError)
+                                                                                              | _,_ -> temp)
                                                                                               )
                   (* | Let(a,b) -> let newg = retGamma g a in retFun (g @ newg) b) *)
 

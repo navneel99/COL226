@@ -44,12 +44,14 @@ File "a4.ml", line 16, characters 26-145:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (_, [])
-File "a4.ml", line 29, characters 25-2040:
+File "a4.ml", line 29, characters 25-2628:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Let (_, _)
-File "a4.ml", line 55, characters 55-59:
-Error: This variant expression is expected to have type unit
-       The constructor Tint does not belong to type unit
-Command exited with code 2.
-# Compilation unsuccessful.
+File "a4.ml", line 59, characters 21-3138:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Let (_, _)
+File "a4.ml", line 39, characters 79-83:
+Warning 26: unused variable ret2.
+# Compilation successful.
