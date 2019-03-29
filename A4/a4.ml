@@ -45,8 +45,8 @@ let rec retFun g e = (match e with
                                                                               | Ttuple x -> ithFromList x i
                                                                               | _ -> raise TypeError)
                   | FunctionAbstraction(s,l) -> let temp = getTypeFromList g s in let temp2 = retFun g l in Tfunc(temp, temp2)
-                  | FunctionCall(a,b) -> let temp = retFun g a in let temp2 = retFun g b in Tfunc(temp, temp2)
-                  | Let(a,b) -> let newg = retGamma g a in retFun (g @ newg) b)
+                  | FunctionCall(a,b) -> let temp = retFun g a in let temp2 = retFun g b in Tfunc(temp, temp2) )
+                  (* | Let(a,b) -> let newg = retGamma g a in retFun (g @ newg) b) *)
 
 
 let rec retGamma g d = match d with

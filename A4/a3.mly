@@ -147,17 +147,16 @@ local_def:
 ;
 
 seq_def:
-  /* | SEMICOLON {Sequence([])}
-  | PARALLEL {Parallel([])} */
-  | simple_def SEMICOLON simple_def { Sequence([$1; $3]) }
-  | simple_def PARALLEL simple_def { Parallel([$1;$3]) }
   | simple_def { $1 }
-  | simple_def PARALLEL seq_def { match $3 with
-                                    | Parallel(x) -> Parallel ($1:: x)
-                                   (* | _ -> Parallel([$3;]) *)}
-  | simple_def SEMICOLON seq_def { match $3 with 
-                                    | Sequence(x) -> Sequence ( $1:: x)
-  (*                                  | _-> Sequence( [$3;] ) *) }
+  | seq_def PARALLEL simple_def { match $1 with
+                                    | Parallel(x) -> Parallel (x @ [$3])
+                                    | Sequence(x) -> Parallel($1 :: [$3])
+                                    | _ -> Parallel([$1] @ [$3] ) 
+                                     }
+  | seq_def SEMICOLON simple_def { match $1 with 
+                                    | Sequence(x) -> Sequence (x @ [$3])
+                                    | Parallel(x) -> Sequence($1 :: [$3])
+                                    | _-> Sequence( [$1] @ [$3] )  }
 ; 
 
 /* paral_def:
