@@ -63,7 +63,7 @@ let t = Tfunc (Tint, Tbool);;
 
 (* Type assumptions as a list of tuples of the form (variable name, type) *)
 let g = [("X", Tint); ("Y", Tbool); ("Z", Ttuple [Tint ; Tbool ; Tint]); ("W", Tfunc (Tint, Tbool))];;
-let d = (def_parser "def U = Y ; def V = Y || def M = X" rho);;
+let d = (def_parser " def U=X ;local (def M = W) in (def N = M) end" rho);;
 let g_dash = [("U", Tint); ("V", Tbool)];;
 (* 
 assert(hastype g e t);;

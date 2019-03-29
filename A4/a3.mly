@@ -136,24 +136,24 @@ constant:
 
 /* Implement the grammar rules for definitions, which may use the parser for expression  */
 def_parser:
-  | local_def EOF    { $1 }
+  | seq_def EOF    { $1 }
   /* | LET ID IN and_expr END EOF { Simple($2, $4) } */
 ;
 
 
 local_def:
   | LOCAL local_def IN seq_def END { Local($2, $4) }
-  | seq_def { $1 }
+  | simple_def { $1 }
 ;
 
 seq_def:
-  | simple_def { $1 }
-  | seq_def PARALLEL simple_def { match $1 with
+  | local_def { $1 }
+  | seq_def PARALLEL local_def { match $1 with
                                     | Parallel(x) -> Parallel (x @ [$3])
                                     | Sequence(x) -> Parallel($1 :: [$3])
                                     | _ -> Parallel([$1] @ [$3] ) 
                                      }
-  | seq_def SEMICOLON simple_def { match $1 with 
+  | seq_def SEMICOLON local_def { match $1 with 
                                     | Sequence(x) -> Sequence (x @ [$3])
                                     | Parallel(x) -> Sequence($1 :: [$3])
                                     | _-> Sequence( [$1] @ [$3] )  }
@@ -169,5 +169,5 @@ seq_def:
 
 simple_def:
   | DEF ID EQ and_expr { Simple($2, $4) }
-  | LP local_def RP  { $2 }
+  | LP seq_def RP  { $2 }
 ;
