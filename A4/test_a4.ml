@@ -54,19 +54,39 @@ let rho s = match s with
 ;;
 
 (* Sample parsing *)
-print_endline ( print_tree (exp_parser "5" rho));;
-print_endline ( print_def (def_parser "def A=5" rho));;
+(* print_endline ( print_tree (exp_parser "5" rho));;
+print_endline ( print_def (def_parser "def A=5" rho));; *)
+
 
 (* Sample test case *)
-let e = (exp_parser "\\X.Y" rho);;
-let t = Tfunc (Tint, Tbool);;
+(* let e = (exp_parser "2+3" rho);;
+let t = Tfunc (Tint, Tbool);; *)
+
+
+
 
 (* Type assumptions as a list of tuples of the form (variable name, type) *)
-let g = [("X", Tint); ("Y", Tbool); ("Z", Ttuple [Tint ; Tbool ; Tint]); ("W", Tfunc (Tint, Tbool))];;
-let d = (def_parser " def U=X ;local (def M = W) in (def N = M) end" rho);;
+(* let g = [("X", Tint); ("Y", Tbool); ("Z", Ttuple [Tint ; Tbool ; Tint]); ("W", Tfunc (Tint, Tbool))];; *)
+(* let d = (def_parser " def U=X ;local (def M = W) in (def N = M) end" rho);; *)
+let g = [("X", Tint); ("Y", Tbool); ("Z", Tfunc(Tint, Tbool)); ("W", Tfunc(Tbool, Tint))]
 let g_dash = [("U", Tint); ("V", Tbool)];;
+
+let e1 = exp_parser "let def A = Z(X) in W(A) end" rho;;
+hastype g e1 Tint;;              (* should return true *)
+let e2 = exp_parser "\\M.(W(Z(M)))" rho;;
+hastype g e2 (Tfunc(Tint, Tint));; (* should return true *)
+
+
+let d1 = def_parser "def U = X" rho;;
+let d2 = def_parser "def U = X ; def V = W(Y)" rho;;
+let d3 = def_parser "def V = W(X)" rho;;
+
+yields g d1 [("U", Tint)];;              (* should return true *)
+yields g d2 [("U", Tint); ("V", Tint)];; (* should return true *)
+yields g d3 [("V", Tint)];;              (* should return false because of failed type check *)
+
 (* 
 assert(hastype g e t);;
 assert(yields g d g_dash);; *)
-hastype g e t;;
-yields g d g_dash;;
+(* hastype g e t;;
+yields g d g_dash;; *)

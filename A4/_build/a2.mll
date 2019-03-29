@@ -57,6 +57,7 @@ rule read = parse
   | ";" {SEMICOLON}
   | "." {DOT}
   | "||" {PARALLEL}
+  | "let" {LET}
   | "local" {LOCAL}
   | str as a {ID a}
   | _ as a {raise (InvalidToken a)}

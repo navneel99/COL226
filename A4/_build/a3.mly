@@ -120,7 +120,7 @@ funAbs_expr:
 ;
 
 let_expr:
-  | LET local_def IN and_expr END { Let($2, $4) }
+  | LET seq_def IN and_expr END { Let($2, $4) }
   | paren_expr { $1 }
 ;
 paren_expr:
