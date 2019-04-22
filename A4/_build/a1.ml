@@ -4,6 +4,7 @@ exception Not_implemented
 exception TypeError
 exception TupleError of string
 (* abstract syntax *)
+
 type  exptree =
   Var of string (* variables starting with a Capital letter, represented as alphanumeric strings with underscores (_) and apostrophes (') *)
   | N of int      (* Integer constant *)
@@ -37,14 +38,15 @@ type  exptree =
   (* projecting the i-th component of an expression (which evaluates to an n-tuple, and 1 <= i <= n) *)
   | Project of (int*int) * exptree   (* Proj((i,n), e)  0 < i <= n *)
   | Let of definition * exptree
-  | FunctionAbstraction of string * exptree
+  | FunctionAbstraction of (string * exptype) * exptree
   | FunctionCall of exptree * exptree
 (* definition *)
 and definition =
-    Simple of string * exptree
+    Simple of (string* exptype) * exptree
   | Sequence of (definition list)
   | Parallel of (definition list)
   | Local of definition * definition
+and exptype = Tint | Tunit | Tbool | Ttuple of (exptype list) | Tfunc of (exptype * exptype)
 
 (* opcodes of the stack machine (in the same sequence as above) *)
 type opcode = VAR of string | NCONST of bigint | BCONST of bool | ABS | UNARYMINUS | NOT
@@ -53,7 +55,6 @@ type opcode = VAR of string | NCONST of bigint | BCONST of bool | ABS | UNARYMIN
   | SIMPLEDEF | SEQCOMPOSE | PARCOMPOSE | LOCALDEF
 
 (* The possible types of expressions in the language of expressions *)
-type exptype = Tint | Tunit | Tbool | Ttuple of (exptype list) | Tfunc of (exptype * exptype)
 
 (* The type of value returned by the definitional interpreter. *)
 type value = NumVal of int | BoolVal of bool | TupVal of int * (value list)

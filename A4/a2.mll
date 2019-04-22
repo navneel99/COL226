@@ -23,6 +23,8 @@ let whitespace =  [' ' '\t']+
 
 let str = ['A'-'Z']['a'-'z''A'-'Z''0'-'9''_' '\'']*
 
+let type = 'T'['a'-'z''A'-'Z''0'-'9']*
+
 rule read = parse
    eof                { EOF }
   | integer as n {INT (int_of_string (remPlus n)) }
@@ -55,9 +57,11 @@ rule read = parse
   | "end" {END}
   | "\\" {BACKSLASH}
   | ";" {SEMICOLON}
+  | ":" {COLON}
   | "." {DOT}
   | "||" {PARALLEL}
   | "let" {LET}
   | "local" {LOCAL}
+  | type as a {TYPE a}
   | str as a {ID a}
   | _ as a {raise (InvalidToken a)}

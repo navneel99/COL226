@@ -1,0 +1,69 @@
+### Starting build.
+# Target: a5.mli.depends, tags: { extension:mli, file:a5.mli, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a5.mli > a5.mli.depends
+# Target: a5.cmi, tags: { byte, compile, extension:mli, file:a5.mli, interf, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a5.cmi a5.mli
+# Target: a5.ml.depends, tags: { extension:ml, file:a5.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a5.ml > a5.ml.depends
+# Target: a5.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:a5.cmo, file:a5.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a5.cmo a5.ml
++ /usr/bin/ocamlc.opt -c -o a5.cmo a5.ml
+File "a5.ml", line 69, characters 25-31:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+[]
+File "a5.ml", line 114, characters 26-34:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Abool _
+File "a5.ml", line 114, characters 46-54:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Abool _
+File "a5.ml", line 117, characters 26-34:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Abool _
+File "a5.ml", line 117, characters 46-54:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Abool _
+File "a5.ml", line 120, characters 26-35:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Aint _
+File "a5.ml", line 120, characters 47-56:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Aint _
+File "a5.ml", line 123, characters 26-35:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Aint _
+File "a5.ml", line 123, characters 47-56:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+Aint _
+File "a5.ml", line 56, characters 8-9:
+Warning 11: this match case is unused.
+File "a5.ml", line 76, characters 4-5:
+Warning 11: this match case is unused.
+File "a5.ml", line 141, characters 4-19:
+Warning 11: this match case is unused.
+# Target: a5lex.mll, tags: { extension:mll, file:a5lex.mll, lexer, ocaml, ocamllex, quiet }
+/usr/bin/ocamllex.opt -q a5lex.mll
+# Target: a5lex.ml.depends, tags: { extension:ml, file:a5lex.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a5lex.ml > a5lex.ml.depends
+# Target: a5gram.mly, tags: { extension:mly, file:a5gram.mly, infer, ocaml, ocamlyacc, parser, quiet }
+/usr/bin/ocamlyacc a5gram.mly
+# Target: a5gram.mli.depends, tags: { extension:mli, file:a5gram.mli, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a5gram.mli > a5gram.mli.depends
+# Target: a5gram.cmi, tags: { byte, compile, extension:mli, file:a5gram.mli, interf, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a5gram.cmi a5gram.mli
+# Target: a5lex.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:a5lex.cmo, file:a5lex.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a5lex.cmo a5lex.ml
+# Target: a5gram.ml.depends, tags: { extension:ml, file:a5gram.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a5gram.ml > a5gram.ml.depends
+# Target: a5gram.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:a5gram.cmo, file:a5gram.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a5gram.cmo a5gram.ml
+# Compilation successful.

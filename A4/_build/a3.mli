@@ -2,6 +2,7 @@ type token =
   | INT of (int)
   | BOOL of (bool)
   | ID of (string)
+  | TYPE of (string)
   | ABS
   | TILDA
   | NOT
@@ -30,6 +31,7 @@ type token =
   | DOT
   | DEF
   | SEMICOLON
+  | COLON
   | PARALLEL
   | LOCAL
   | EOF
@@ -38,3 +40,5 @@ val def_parser :
   (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> A1.definition
 val exp_parser :
   (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> A1.exptree
+val type_parser :
+  (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> A1.exptype

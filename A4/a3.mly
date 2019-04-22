@@ -14,14 +14,49 @@
 %token <int> INT
 %token <bool> BOOL
 %token <string> ID
+%token <string> TYPE
 %token ABS TILDA NOT PLUS MINUS TIMES DIV REM CONJ DISJ EQ GT LT LP RP IF THEN ELSE FI COMMA PROJ
-LET IN END BACKSLASH DOT DEF SEMICOLON PARALLEL LOCAL EOF
+LET IN END BACKSLASH DOT DEF SEMICOLON COLON PARALLEL LOCAL EOF
 /* %token ABS TILDA NOT PLUS MINUS TIMES DIV REM CONJ DISJ EQ GT LT LP RP IF THEN ELSE FI COMMA PROJ EOF */
-%start  def_parser exp_parser
+%start  def_parser exp_parser type_parser
 %type <A1.definition> def_parser  /* Returns definitions */
 %type <A1.exptree> exp_parser /* Returns expression */
+%type <A1.exptype> type_parser
 %%
 /* The grammars written below are dummy. Please rewrite it as per the specifications. */
+
+type_parser:
+  | type_parser MINUS GT tupType_expr { Tfunc($1,$4)}
+  | tupType_expr { $1 }
+;
+tupType_expr:
+  | LP remType_par RP {Ttuple($2)} 
+  | LP RP {Ttuple([])}
+  | base_expr { $1 }
+;
+remType_par:
+  | type_parser TIMES type_parser { [$1;$3]}
+  | type_parser TIMES remType_par { $1::$3 }
+/* tup_expr:
+  | LP rem_par RP { let a,b = $2 in Tuple(a,b) }  
+  | LP RP    {Tuple(0,[])}
+  | funCall_expr { $1 }
+;
+
+rem_par:
+  | and_expr COMMA and_expr{ (2,[$1;$3]) }
+  | and_expr COMMA rem_par {let x,y = $3 in (x+1,$1::y)}
+;  */
+
+base_expr:
+/* type_parser: */
+  | TYPE { match $1 with 
+            | "Tunit" -> Tunit
+            | "Tint" -> Tint
+            | "Tbool" -> Tbool
+          }
+  | LP type_parser RP { $2 }
+;
 
 /* Implement the grammar rules for expressions, which may use the parser for definitions */
 exp_parser:
@@ -91,10 +126,24 @@ abs_expr:
 ;
  ifte_expr:
   | IF and_expr THEN and_expr ELSE and_expr FI { IfThenElse($2,$4,$6) }
-  | proj_expr                         { $1 }
+  | funCall_expr                         { $1 }
 ; 
 
- proj_expr:
+ 
+funCall_expr:
+  | funAbs_expr LP and_expr RP {FunctionCall($1,$3)}
+  | funAbs_expr { $1 }
+;
+funAbs_expr:
+  | BACKSLASH ID COLON type_parser DOT let_expr { FunctionAbstraction(($2,$4),$6)}
+  | let_expr { $1 }
+;
+
+let_expr:
+  | LET seq_def IN and_expr END { Let($2, $4) }
+  | proj_expr { $1 }
+;
+proj_expr:
   | PROJ LP INT COMMA INT RP tup_expr { Project(($3,$5),$7)}
   | tup_expr { $1 }
 ;
@@ -102,7 +151,7 @@ abs_expr:
 tup_expr:
   | LP rem_par RP { let a,b = $2 in Tuple(a,b) }  
   | LP RP    {Tuple(0,[])}
-  | funCall_expr { $1 }
+  | paren_expr { $1 }
 ;
 
 rem_par:
@@ -110,19 +159,6 @@ rem_par:
   | and_expr COMMA rem_par {let x,y = $3 in (x+1,$1::y)}
 ; 
 
-funCall_expr:
-  | funAbs_expr LP and_expr RP {FunctionCall($1,$3)}
-  | funAbs_expr { $1 }
-;
-funAbs_expr:
-  | BACKSLASH ID DOT let_expr { FunctionAbstraction($2,$4)}
-  | let_expr { $1 }
-;
-
-let_expr:
-  | LET seq_def IN and_expr END { Let($2, $4) }
-  | paren_expr { $1 }
-;
 paren_expr:
   | LP and_expr RP { InParen($2) }
   | constant { $1 }
@@ -168,6 +204,6 @@ seq_def:
 
 
 simple_def:
-  | DEF ID EQ and_expr { Simple($2, $4) }
+  | DEF ID COLON type_parser EQ and_expr { Simple(($2,$4), $6) }
   | LP seq_def RP  { $2 }
 ;
