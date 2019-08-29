@@ -52,7 +52,7 @@ let rec krivineMC c s = (match c with
     | Bool b -> Clos(Bool b,y)
     | V m -> let newc = getValueFromList (V m) y in krivineMC newc s
     | Cmp a -> let ans = (krivineMC(Clos(a,y)) s) in (match ans with
-      | Clos(q,w) -> if (q = Integer 0) then Clos(Bool true,w) else Clos(Bool false,w)
+      | Clos(q,w) -> if (q >= Integer 0) then Clos(Bool true,w) else Clos(Bool false,w)
       | _ -> raise TypeError)
     | Plus(a,b) -> let Clos(exp1,tab1) = krivineMC (Clos(a,y)) s in let Clos(exp2,tab2) = krivineMC (Clos(b,y)) s in (match exp1,exp2 with
       | Integer e1, Integer e2 -> Clos(Integer(e1+e2),tab1 @ tab2)
@@ -109,7 +109,7 @@ let rec secdMC s e c d = match c with
                    let compiledAns = compile exp e in
                    let secdAns = secdMC [] (e) compiledAns [] in
                    secdMC (secdAns::s) e xs d
-  | (CMP)::xs -> if (List.hd s = Aint 0) then secdMC (Abool true::List.tl s) e xs d else secdMC (Abool false::List.tl s) e xs d
+  | (CMP)::xs -> if (List.hd s >= Aint 0) then secdMC (Abool true::List.tl s) e xs d else secdMC (Abool false::List.tl s) e xs d
   | (PLUS)::xs -> (match s with
     | a::(b::left) -> let Aint(a1) = a in let Aint(a2) = b in secdMC (Aint(a1+a2)::left) e xs d
     | _ -> raise LessElementsError)

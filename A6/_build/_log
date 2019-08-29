@@ -1,0 +1,124 @@
+### Starting build.
+# Target: a6.mli.depends, tags: { extension:mli, file:a6.mli, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a6.mli > a6.mli.depends
+# Target: a6.cmi, tags: { byte, compile, extension:mli, file:a6.mli, interf, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a6.cmi a6.mli
+# Target: a6.ml.depends, tags: { extension:ml, file:a6.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a6.ml > a6.ml.depends
+# Target: a6.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:a6.cmo, file:a6.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a6.cmo a6.ml
++ /usr/bin/ocamlc.opt -c -o a6.cmo a6.ml
+File "a6.ml", line 10, characters 29-47:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 13, characters 23-550:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+""
+File "a6.ml", line 27, characters 25-43:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 49, characters 19-29:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 57, characters 19-42:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 62, characters 32-73:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 66, characters 62-109:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 94, characters 26-65:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 104, characters 19-28:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 111, characters 19-39:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 114, characters 25-77:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 116, characters 62-119:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 127, characters 8-38:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 130, characters 32-73:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 131, characters 4-1244:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(Procedure _|LocalV _|AllV _|Frame (_, _, _, _, _)|FrameList _)
+File "a6.ml", line 156, characters 19-28:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 160, characters 19-28:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 162, characters 22-63:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 163, characters 8-54:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 171, characters 28-69:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+File "a6.ml", line 172, characters 26-67:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(ArgI (_, _)|ArgS (_, _)|Procedure _|LocalV _|AllV _|FrameList _)
+# Target: a6lex.mll, tags: { extension:mll, file:a6lex.mll, lexer, ocaml, ocamllex, quiet }
+/usr/bin/ocamllex.opt -q a6lex.mll
+# Target: a6lex.ml.depends, tags: { extension:ml, file:a6lex.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a6lex.ml > a6lex.ml.depends
+# Target: a6gram.mly, tags: { extension:mly, file:a6gram.mly, infer, ocaml, ocamlyacc, parser, quiet }
+/usr/bin/ocamlyacc a6gram.mly
+# Target: a6gram.mli.depends, tags: { extension:mli, file:a6gram.mli, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a6gram.mli > a6gram.mli.depends
+# Target: a6gram.cmi, tags: { byte, compile, extension:mli, file:a6gram.mli, interf, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a6gram.cmi a6gram.mli
+# Target: a6lex.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:a6lex.cmo, file:a6lex.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a6lex.cmo a6lex.ml
+# Target: a6gram.ml.depends, tags: { extension:ml, file:a6gram.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep.opt -modules a6gram.ml > a6gram.ml.depends
+# Target: a6gram.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:a6gram.cmo, file:a6gram.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc.opt -c -o a6gram.cmo a6gram.ml
++ /usr/bin/ocamlc.opt -c -o a6gram.cmo a6gram.ml
+File "a6gram.mly", line 21, characters 75-1004:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+((ArgS (_, _),
+ (Procedure _|LocalV _|AllV _|Frame (_, _, _, _, _)|FrameList _))|
+(ArgI (_, _),
+(Procedure _|LocalV _|AllV _|Frame (_, _, _, _, _)|FrameList _))|
+((Procedure _|LocalV _|AllV _|Frame (_, _, _, _, _)|FrameList _), _))
+File "a6gram.mly", line 31, characters 29-195:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(Procedure _|LocalV _|AllV _|Frame (_, _, _, _, _)|FrameList _)
+# Compilation successful.
